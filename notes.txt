@@ -1,0 +1,73 @@
+We cannot feed a pdf of more pages like ex 534, for creating its document from pypdf, we cannot feed that amount of document. The problem will arise called context window.
+Text Splitter:
+Most of the embedding models and language model have a context window and they cannot take infinite tokens at the same time so for that we have to use text splitting.
+so for every document that we have we will split into chunks
+
+Better Retrieval in RAG
+In RAG, we search through vector embeddings.
+If the document is too large: embeddings become less precise
+Smaller chunks allow the system to retrieve only the most relevant peice of information instead of the whole document
+
+More Accurate Embeddings
+Embeddings work best when the text represents one clear idea or topic
+If you embed very large text:
+-> Multiple topics mix together, semantic meaning becomes blurred
+Chunking ensures each embedding represents a focused concept
+
+Faster processing
+Working with smaller chunks:
+speeds up embedding creation, speeds up similarity search in vector dbs(Chroma, Pinecone, FAISS).
+Large documents would make the pipeline slower and expensive
+
+1. Charachter- Based chunking:
+
+by def splitter uses \n\n to separate as a next chunk
+split_text() plain string
+split_documents()  generally documents
+
+chunk stores metadata and page_content both
+2 ways: split by tokens or split by chars
+
+split by tokens works better bcz it makes chunks for words or something better to relate, so meaning is captured more bettter way
+split by chars uses \n\n where tokens doesnt.It does not uses any separator. 
+The chunk size in case of split by token, will take one chunk with that no. of token.
+steps: The statement or sentence/words is first tokenize. Then basis of chunk size the tokens is captured.The background process uses technique tiktoken. The chatgpt 2 onwards we use this technique.
+and one more way is there:
+3 way:Semantic/ meaning based splitting:
+divides a document into chunks based on the meaning and structure of the text, rather than chars or tokens.The goal is to keep complete ideas together so that each chunk contains a coherent piece of information
+
+one way is this: splitting recursively -Text splitter
+in case of split by chars, the text was getting splitting on every \n\n. Similarly here list is ['\n\n', '\n', ' ', '']
+In this chunk size not matters, what matters is the meaning
+
+
+After this our next step will be create embeddings of these chunks, so that we can store vector dbs
+We create embedding of the chunk with some dimensions and do similarity searching.
+Why we use vector store:
+lets say you upload a large pdf and after chunking if you get around 1 lakh chunks. Now suppose your embedding model produces embeddings with 512 dimensions.
+In basic db when these embeddings are stored, and user query is provided and searched from the db,
+so the query is first converted into embedding called query embedding, now for this query embedding we do similarity search in db, one by one its done.
+The biggest problem is this 512 dimension embedding is different from all the 1 lakh embeddings in our db, so we conduct a similarity search with all the 1 lakh embeddings.
+Vector store: So you are working at O(n) time complexity and you are searching for 1 lakh time and then finding out and this dataset can become more big so they are not the reliable option for similarity searching. so they are not reliable for similarity search
+where as vector store use approximate nearest neighbour (ANN) algorthms like:
+HNSW, IVF, PQ
+and all of these are indexing techniques, now we are not going to see all but lets see and example why its fast
+IVF: Inverted File Index- Let say we divide our db in 5 clusters using k-means or any other algo. so each will have 20000 embeddings (total 1lakh) and all of them have some sort of similarity.
+We then create a centroid for our clusters, Now for the query embedding we can find which cluster is suitable for searching and we search in those 20,000 embeddings. that is actually 5 times faster than that normal db.
+ex: for our query embedding that is also of 512 dimensions, we compare(find similarity search) with 5 embeddings from the centroid of the 5 clusters.so now we dont need to search in 1 lakh embeddings, we just have search in 20,000 embedding of that cluster.After searching all of these 20,000 embeddings, it is making your model 5 times faster than your normal db. Here we search only 20,000 and we retrieve the similar embedding.
+Vector stores are many: chroma, FAISS, Annoy
+
+
+Retrievers: 
+Phase1:
+PDF -> DocumentLoader -> use text splitter for documents -> on basis of that we created chunks -> after this using embedding model we create embeddings for those chunks -> and then save them to vector store
+Phase2:
+create embedding for user query -> goes to retrievers then searches in vector stores using searching algorithm and retrieves similar chunks for query (also called relevant context -> similar chunks of group with user query -> prompt-template -> prompt is get transferred to LLM -> after that it generates a response.
+
+A retriever takes a user query and returns the most relevant documents or chunks from a database.
+Now there are 2 types of retriever:
+1.by data source(Wikipedia, Arxiv(Research paper docs are published), PubMed, etc)
+2.by retrieval/searching strategy(similarity, MMR, Multiquery, etc)
+
+By Data source:
+When we talk about retrievers using data sources, we mean retrievers that fetch information from specific information from specific external sources or databases instead of your own vector store. These retrievers connect to APIs or datasets and return relevant documents for the query.

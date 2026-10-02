@@ -1,0 +1,80 @@
+RAG Practice Notes - Generative AI and Retrieval
+
+1. Generative AI
+Generative AI refers to artificial intelligence systems that can create new content such as text, images, audio, video, and code. Large language models are a common example of generative AI systems.
+
+2. Large Language Models
+Large language models (LLMs) are trained on large collections of text and learn patterns in language. They can be used for question answering, summarization, translation, coding, and content generation. An LLM's knowledge may not contain private or recently created company information unless that information is provided to it.
+
+3. Embeddings
+Embeddings convert text into numerical vectors. Texts with similar meanings generally have vectors that are close to each other in vector space. Embeddings are commonly used for semantic search and retrieval.
+
+4. Vector Databases
+A vector database stores embeddings and allows applications to search for vectors that are semantically similar to a query. Examples include Chroma, FAISS, Qdrant, Pinecone, and Milvus.
+
+5. Retrieval-Augmented Generation
+Retrieval-Augmented Generation, commonly called RAG, combines information retrieval with a language model. Instead of asking the LLM to answer only from its existing knowledge, the application first retrieves relevant documents and provides them as context to the LLM.
+
+6. Basic RAG Pipeline
+A typical RAG pipeline has these steps:
+- Load documents.
+- Split documents into smaller chunks.
+- Generate embeddings for the chunks.
+- Store the embeddings in a vector database.
+- Convert the user's question into an embedding.
+- Retrieve the most relevant chunks.
+- Provide the retrieved context to the LLM.
+- Generate the final answer.
+
+7. Document Loaders
+Document loaders are responsible for reading data from different sources. Common sources include TXT files, PDF files, Word documents, web pages, and databases. In LangChain, different loaders are available for different document types.
+
+8. Text Splitting
+Large documents are usually split into smaller chunks before creating embeddings. Chunk size and chunk overlap affect retrieval quality. Very small chunks may lose context, while very large chunks may contain too much unrelated information.
+
+9. Chunk Overlap
+Chunk overlap means that a small portion of one chunk is repeated in the next chunk. Overlap helps preserve information that appears near chunk boundaries. For example, a chunk size of 500 characters with an overlap of 50 characters means approximately 50 characters can be shared between neighboring chunks.
+
+10. Semantic Search
+Semantic search finds information based on meaning rather than exact keyword matches. For example, a query such as "How does an application find relevant documents?" may retrieve information about retrieval even if the exact word "retrieve" is not present in the query.
+
+11. Retriever
+A retriever receives a query and returns relevant documents or document chunks. In a RAG application, the retriever connects the vector database with the generation step.
+
+12. Prompt Augmentation
+After retrieving relevant chunks, the application adds those chunks to the prompt sent to the LLM. This gives the model additional context that came from the application's knowledge base.
+
+13. Example RAG Question
+Question: What is the purpose of embeddings?
+Expected answer: Embeddings convert text into numerical vectors that represent semantic meaning and can be used for similarity search and retrieval.
+
+14. Example RAG Question
+Question: Why are documents split into chunks?
+Expected answer: Documents are split into chunks so that smaller, relevant pieces of information can be embedded, stored, and retrieved efficiently.
+
+15. Example RAG Question
+Question: What is the role of Chroma in a RAG system?
+Expected answer: Chroma can store document embeddings and perform similarity search to retrieve relevant chunks for a user's query.
+
+16. RAG Advantages
+RAG can help applications work with private documents, provide answers grounded in a specific knowledge base, reduce the need to retrain a model for every new document, and make it easier to update the application's knowledge.
+
+17. RAG Limitations
+RAG quality depends on document quality, chunking strategy, embedding quality, retrieval quality, and the final LLM. If the retriever returns irrelevant context, the generated answer may also be incorrect or incomplete.
+
+18. RAG and Fine-Tuning
+RAG and fine-tuning solve different problems. RAG is useful when a model needs access to external or changing knowledge. Fine-tuning is generally used to adapt a model's behavior, style, or task-specific capabilities.
+
+19. Testing RAG
+A useful RAG test should include questions whose answers are clearly present in the documents. It should also include questions about different sections of the documents and questions that require combining information from multiple chunks.
+
+20. Important Terms
+Document: Source information loaded into the RAG system.
+Chunk: A smaller section of a document.
+Embedding: Numerical representation of text.
+Vector Store: Storage and search system for embeddings.
+Retriever: Component that finds relevant chunks.
+Context: Retrieved information supplied to the LLM.
+Generation: The final answer produced by the LLM.
+
+End of notes.

@@ -1,0 +1,16 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environments and local secrets
+.venv/
+.env
+.env.*
+!.env.example
+
+# OS/editor noise
+.DS_Store
+
+# Generated project data
+vector_store/
+chroma_db/

@@ -1,0 +1,42 @@
+# LangChain core
+langchain
+langchain-core
+langchain-community
+
+# LangChain integrations
+langchain-openai
+langchain-google-genai
+langchain-mistralai
+langchain-groq
+langchain-huggingface
+langchain-nvidia-ai-endpoints
+
+# RAG / Vector Database
+chromadb
+langchain-chroma
+
+# Embeddings / Hugging Face
+sentence-transformers
+transformers
+huggingface-hub
+
+# Document processing
+pypdf
+python-docx
+beautifulsoup4
+unstructured
+
+# Environment variables
+python-dotenv
+
+# ML / numerical dependencies
+torch
+
+# Useful utilities
+tiktoken
+
+# Optional API / UI
+streamlit
+fastapi
+uvicorn
+arxiv
